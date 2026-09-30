@@ -1,5 +1,6 @@
 #include "FibonacciHeap.hpp"
 #include <stdexcept>
+#include <utility>
 
 struct FibonacciHeap::Node {
     int key;
@@ -91,4 +92,107 @@ void FibonacciHeap::link(Node* child, Node* parent){
     }
 
     ++parent->degree;
+}
+
+void FibonacciHeap::consolidate(){
+    if(min_ == nullptr) return;
+
+    std::vector<Node*> roots;
+    Node* current = min_;
+
+    do{
+        roots.push_back(current);
+        current = current->right;
+    }while(current != min_);
+
+    std::vector<Node*> by_degree;
+
+    for (Node* root: roots){
+        Node* x = root;
+        std::size_t d = x->degree;
+
+        while(true){
+            if (d >= by_degree.size()){
+                by_degree.resize(d + 1, nullptr);
+            }
+
+            if (by_degree[d] == nullptr){
+                break;
+            }
+
+            Node* y = by_degree[d];
+
+            if (x->key > y->key){
+                std::swap(x, y);
+            }
+
+            link(y, x);
+            by_degree[d] = nullptr;
+            d = x->degree;
+        }
+
+        by_degree[d] = x;
+    }
+
+    min_ = nullptr;
+
+    for(Node* node: by_degree){
+        if(node == nullptr) continue;
+
+        detach(node);
+
+        if(min_ == nullptr){
+            min_ = node;
+        }else{
+            insert_after(min_, node);
+            if(node->key < min_->key){
+                min_ = node;
+            }
+        }
+    }
+}
+
+int FibonacciHeap::extract_min(){
+    if(size_ == 0){
+        throw std::out_of_range("The Heap is empty to return a minimum value.");
+    }
+
+    Node* z = min_;
+    int value = z->key;
+
+    std::vector<Node*> children;
+    Node* directChildren = z->child;
+    
+    if(directChildren != nullptr){
+        Node* current = directChildren;
+        do{
+            children.push_back(current);
+            current = current->right;
+        }while(current != directChildren);
+
+        for(Node* child: children){
+            detach(child);
+            child->parent = nullptr;
+            child->mark = false;
+            insert_after(z, child);
+        }
+    }
+
+    if(z->right == z){
+        min_ = nullptr;
+    }else{
+        Node* rNeighbor = z->right;
+        detach(z);
+        min_ = rNeighbor;
+    }
+
+    nodes_[z->id] = nullptr;
+    delete(z);
+    --size_;
+
+    if(size_ != 0){
+        consolidate();
+    }
+
+    return value;
 }

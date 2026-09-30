@@ -29,6 +29,8 @@ class FibonacciHeap {
         FibonacciHeap(const FibonacciHeap&) = delete;
         FibonacciHeap& operator=(const FibonacciHeap&) = delete;
 
+        int extract_min();
+
     private:
         struct Node;
         Node* min_ = nullptr;
@@ -39,5 +41,6 @@ class FibonacciHeap {
 
         static void detach(Node* node);
         static void link(Node* child, Node* parent);
+        void consolidate();
 
 };
