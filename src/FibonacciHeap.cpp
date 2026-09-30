@@ -20,7 +20,11 @@ void FibonacciHeap::insert_after(Node* position, Node* node){
 }
 
 FibonacciHeap::Handle FibonacciHeap::insert(int key){
-    Node* node = new Node(key);
+    auto owned = std::make_unique<Node>(key); //Don't really get it but sure.
+    Node* node = owned.get();
+
+    std::size_t id = nodes_.size();
+    nodes_.push_back(node);
 
     if (min_ == nullptr){
         min_ = node;
@@ -32,9 +36,8 @@ FibonacciHeap::Handle FibonacciHeap::insert(int key){
         }
     }
 
-    std::size_t id = nodes_.size();
-    nodes_.push_back(node);
     ++size_;
+    owned.release();
 
     return Handle(id);
 }
