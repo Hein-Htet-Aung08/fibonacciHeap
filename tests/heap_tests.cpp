@@ -6,6 +6,7 @@ int main(){
     FibonacciHeap fbh;
     assert(fbh.empty());
     assert(fbh.size() == 0);
+    assert(fbh.validate());
 
     bool error0 = false;
     try{
@@ -14,6 +15,7 @@ int main(){
         error0 = true;
     }
     assert(error0);
+    assert(fbh.validate());
 
     bool error1 = false;
     try{
@@ -22,29 +24,35 @@ int main(){
         error1 = true;
     }
     assert(error1);
+    assert(fbh.validate());
 
     fbh.insert(10);
     assert(!fbh.empty());
     assert(fbh.size() == 1);
     assert(fbh.minimum() == 10);
+    assert(fbh.validate());
 
     auto value = fbh.extract_min();
     assert(value == 10);
     assert(fbh.size() == 0);
+    assert(fbh.validate());
 
     fbh.insert(10);
     auto four = fbh.insert(4);
     assert(fbh.minimum() == 4);
     assert(fbh.size() == 2);
+    assert(fbh.validate());
 
     fbh.insert(7);
     assert(fbh.minimum() == 4);
     assert(fbh.size() == 3);
+    assert(fbh.validate());
 
     auto four2 = fbh.insert(4);
     assert(fbh.minimum() == 4);
     assert(fbh.size() == 4);
     assert(!(four == four2)); //Checking whether they have different handles.
+    assert(fbh.validate());
 
     std::vector<int> testVec;
     std::size_t expected = fbh.size();
@@ -54,12 +62,14 @@ int main(){
         assert(expected == fbh.size());
     }
     assert((testVec == std::vector<int>{4, 4, 7, 10}));
+    assert(fbh.validate());
 
     fbh.insert(1);
     fbh.insert(4);
     fbh.insert(7);
     fbh.insert(10);
     fbh.insert(12);
+    assert(fbh.validate());
     std::vector<int> testVec2;
     expected = fbh.size();
     while(!fbh.empty()){
@@ -68,12 +78,14 @@ int main(){
         assert(expected == fbh.size());
     }
     assert((testVec2 == std::vector<int>{1, 4, 7, 10, 12}));
+    assert(fbh.validate());
 
     fbh.insert(3);
     auto five = fbh.insert(5);
     auto seven = fbh.insert(7);
     auto nine = fbh.insert(9);
     auto eleven = fbh.insert(11);
+    assert(fbh.validate());
     //Decrease a root below the minimum
     assert(fbh.minimum() == 3);
     fbh.decrease_key(eleven, 2);
@@ -114,4 +126,22 @@ int main(){
     }
     assert((testVec3 == std::vector<int>{1, 3, 5, 7}));
     assert(fbh.empty());
+
+    for(int i = 0; i < 6; ++i){
+        fbh.insert(i);
+    }
+    auto six = fbh.insert(6);
+    auto seven1 = fbh.insert(7);
+    fbh.insert(8);
+    int min = fbh.extract_min();
+    assert(min == 0);
+    fbh.decrease_key(six, -1);
+    assert(fbh.validate());
+    fbh.decrease_key(seven1, -2);
+    assert(fbh.validate());
+    std::vector<int> testVec4;
+    while(!fbh.empty()){
+        testVec4.push_back(fbh.extract_min());
+    }
+    assert((testVec4 == std::vector<int>{-2, -1, 1, 2, 3, 4, 5, 8}));
 }

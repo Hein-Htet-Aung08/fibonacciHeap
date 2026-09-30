@@ -8,6 +8,7 @@ class FibonacciHeap {
         int minimum() const;
         bool empty() const;
         std::size_t size() const;
+        bool validate() const;
 
         class Handle {
             friend class FibonacciHeap;

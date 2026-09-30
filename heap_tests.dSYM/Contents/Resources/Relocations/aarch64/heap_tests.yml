@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/hein/Documents/UTS/Spring 2026/Advanced Algorithms/Assignment1/fibonacciHeap/heap_tests'
+relocations:     []
+...
