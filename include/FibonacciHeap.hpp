@@ -42,5 +42,6 @@ class FibonacciHeap {
         static void detach(Node* node);
         static void link(Node* child, Node* parent);
         void consolidate();
+        void cut(Node* node, Node* parent);
 
 };

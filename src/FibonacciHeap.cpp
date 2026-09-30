@@ -196,3 +196,20 @@ int FibonacciHeap::extract_min(){
 
     return value;
 }
+
+void FibonacciHeap::cut(Node* node, Node* parent){
+    if(parent->child == node){
+        if(node->right == node){
+            parent->child = nullptr;
+        }else{
+            parent->child = node->right;
+        }
+    }
+
+    detach(node);
+    --parent->degree;
+
+    node->parent = nullptr;
+    node->mark = false;
+    insert_after(min_, node);
+}
