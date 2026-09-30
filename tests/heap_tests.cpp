@@ -1,8 +1,10 @@
 #include "FibonacciHeap.hpp"
+#include "IndexedBinaryHeap.hpp"
 #include <cassert>
 #include <stdexcept>
 
 int main(){
+    //Fibonacci Heap Tests
     FibonacciHeap fbh;
     assert(fbh.empty());
     assert(fbh.size() == 0);
@@ -144,4 +146,147 @@ int main(){
         testVec4.push_back(fbh.extract_min());
     }
     assert((testVec4 == std::vector<int>{-2, -1, 1, 2, 3, 4, 5, 8}));
+
+    //Indexed Binary Heap Tests
+    IndexedBinaryHeap ibh;
+    assert(ibh.empty());
+    assert(ibh.size() == 0);
+    assert(ibh.validate());
+
+    bool error0_ibh = false;
+    try{
+        ibh.minimum();
+    }catch(const std::out_of_range&){
+        error0_ibh = true;
+    }
+    assert(error0_ibh);
+    assert(ibh.validate());
+
+    bool error1_ibh = false;
+    try{
+        ibh.extract_min();
+    }catch(const std::out_of_range&){
+        error1_ibh = true;
+    }
+    assert(error1_ibh);
+    assert(ibh.validate());
+
+    ibh.insert(10);
+    assert(!ibh.empty());
+    assert(ibh.size() == 1);
+    assert(ibh.minimum() == 10);
+    assert(ibh.validate());
+
+    auto value_ibh = ibh.extract_min();
+    assert(value_ibh == 10);
+    assert(ibh.size() == 0);
+    assert(ibh.validate());
+
+    ibh.insert(10);
+    auto four_ibh = ibh.insert(4);
+    assert(ibh.minimum() == 4);
+    assert(ibh.size() == 2);
+    assert(ibh.validate());
+
+    ibh.insert(7);
+    assert(ibh.minimum() == 4);
+    assert(ibh.size() == 3);
+    assert(ibh.validate());
+
+    auto four2_ibh = ibh.insert(4);
+    assert(ibh.minimum() == 4);
+    assert(ibh.size() == 4);
+    assert(!(four_ibh == four2_ibh)); //Checking whether they have different handles.
+    assert(ibh.validate());
+
+    std::vector<int> testVec_ibh;
+    std::size_t expected_ibh = ibh.size();
+    while(!ibh.empty()){
+        testVec_ibh.push_back(ibh.extract_min());
+        --expected_ibh;
+        assert(expected_ibh == ibh.size());
+    }
+    assert((testVec_ibh == std::vector<int>{4, 4, 7, 10}));
+    assert(ibh.validate());
+
+    ibh.insert(1);
+    ibh.insert(4);
+    ibh.insert(7);
+    ibh.insert(10);
+    ibh.insert(12);
+    assert(ibh.validate());
+    std::vector<int> testVec2_ibh;
+    expected_ibh = ibh.size();
+    while(!ibh.empty()){
+        testVec2_ibh.push_back(ibh.extract_min());
+        --expected_ibh;
+        assert(expected_ibh == ibh.size());
+    }
+    assert((testVec2_ibh == std::vector<int>{1, 4, 7, 10, 12}));
+    assert(ibh.validate());
+
+    ibh.insert(3);
+    auto five_ibh = ibh.insert(5);
+    auto seven_ibh = ibh.insert(7);
+    auto nine_ibh = ibh.insert(9);
+    auto eleven_ibh = ibh.insert(11);
+    assert(ibh.validate());
+    //Decrease a root below the minimum
+    assert(ibh.minimum() == 3);
+    ibh.decrease_key(eleven_ibh, 2);
+    assert(ibh.minimum() == 2);
+    //Decrease to the same key
+    bool error2_ibh = false;
+    try{  
+        ibh.decrease_key(five_ibh, 5);
+    }catch(const std::invalid_argument&){
+        error2_ibh = true;
+    }
+    assert(!error2_ibh);
+    //Attempt to increase a key
+    bool error3_ibh = false;
+    try{  
+        ibh.decrease_key(seven_ibh, 9);
+    }catch(const std::invalid_argument&){
+        error3_ibh = true;
+    }
+    assert(error3_ibh);
+    //Decrease using an extracted item's handle
+    ibh.extract_min();
+    bool error4_ibh = false;
+    try{
+        ibh.decrease_key(eleven_ibh, 1);
+    }catch(const std::invalid_argument){
+        error4_ibh = true;
+    }
+    assert(error4_ibh);
+    assert(ibh.minimum() == 3);
+    //Decrease a child below its parent
+    ibh.decrease_key(nine_ibh, 1);
+    assert(ibh.minimum() == 1);
+    assert(ibh.size() == 4);
+    std::vector<int> testVec3_ibh;
+    while(!ibh.empty()){
+        testVec3_ibh.push_back(ibh.extract_min());
+    }
+    assert((testVec3_ibh == std::vector<int>{1, 3, 5, 7}));
+    assert(ibh.empty());
+
+    for(int i = 0; i < 6; ++i){
+        ibh.insert(i);
+    }
+    auto six_ibh = ibh.insert(6);
+    auto seven1_ibh = ibh.insert(7);
+    ibh.insert(8);
+    int min_ibh = ibh.extract_min();
+    assert(min_ibh == 0);
+    ibh.decrease_key(six_ibh, -1);
+    assert(ibh.validate());
+    ibh.decrease_key(seven1_ibh, -2);
+    assert(ibh.validate());
+    std::vector<int> testVec4_ibh;
+    while(!ibh.empty()){
+        testVec4_ibh.push_back(ibh.extract_min());
+    }
+    assert((testVec4_ibh == std::vector<int>{-2, -1, 1, 2, 3, 4, 5, 8}));
 }
