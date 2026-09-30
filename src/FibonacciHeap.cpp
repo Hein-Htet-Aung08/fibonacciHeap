@@ -29,7 +29,7 @@ FibonacciHeap::Handle FibonacciHeap::insert(int key){
 
     auto owned = std::make_unique<Node>(key, id); //Don't really get it but sure.
     Node* node = owned.get();
-    
+
     nodes_.push_back(node);
 
     if (min_ == nullptr){
@@ -68,4 +68,27 @@ FibonacciHeap::~FibonacciHeap(){
     for(Node* node: nodes_){
         delete node;
     }
+}
+
+void FibonacciHeap::detach(Node* node){
+    node->left->right = node->right;
+    node->right->left = node->left;
+
+    node->left = node;
+    node->right = node;
+}
+
+void FibonacciHeap::link(Node* child, Node* parent){
+    detach(child);
+
+    child->parent = parent;
+    child->mark = false;
+    
+    if(parent->child == nullptr){
+        parent->child = child;
+    }else{
+        insert_after(parent->child, child);
+    }
+
+    ++parent->degree;
 }

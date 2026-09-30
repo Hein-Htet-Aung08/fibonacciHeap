@@ -37,4 +37,7 @@ class FibonacciHeap {
         static void insert_after(Node* position, Node* node);
         std::vector<Node*> nodes_;
 
+        static void detach(Node* node);
+        static void link(Node* child, Node* parent);
+
 };
