@@ -213,3 +213,17 @@ void FibonacciHeap::cut(Node* node, Node* parent){
     node->mark = false;
     insert_after(min_, node);
 }
+
+void FibonacciHeap::cascading_cut(Node* node){
+    Node* p = node->parent;
+
+    if(p==nullptr) return;
+
+    if(node->mark == false){
+        node->mark = true;
+        return;
+    }else{
+        cut(node, p);
+        cascading_cut(p);
+    }
+}
