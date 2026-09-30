@@ -68,4 +68,50 @@ int main(){
         assert(expected == fbh.size());
     }
     assert((testVec2 == std::vector<int>{1, 4, 7, 10, 12}));
+
+    fbh.insert(3);
+    auto five = fbh.insert(5);
+    auto seven = fbh.insert(7);
+    auto nine = fbh.insert(9);
+    auto eleven = fbh.insert(11);
+    //Decrease a root below the minimum
+    assert(fbh.minimum() == 3);
+    fbh.decrease_key(eleven, 2);
+    assert(fbh.minimum() == 2);
+    //Decrease to the same key
+    bool error2 = false;
+    try{  
+        fbh.decrease_key(five, 5);
+    }catch(const std::invalid_argument&){
+        error2 = true;
+    }
+    assert(!error2);
+    //Attempt to increase a key
+    bool error3 = false;
+    try{  
+        fbh.decrease_key(seven, 9);
+    }catch(const std::invalid_argument&){
+        error3 = true;
+    }
+    assert(error3);
+    //Decrease using an extracted item's handle
+    fbh.extract_min();
+    bool error4 = false;
+    try{
+        fbh.decrease_key(eleven, 1);
+    }catch(const std::invalid_argument){
+        error4 = true;
+    }
+    assert(error4);
+    assert(fbh.minimum() == 3);
+    //Decrease a child below its parent
+    fbh.decrease_key(nine, 1);
+    assert(fbh.minimum() == 1);
+    assert(fbh.size() == 4);
+    std::vector<int> testVec3;
+    while(!fbh.empty()){
+        testVec3.push_back(fbh.extract_min());
+    }
+    assert((testVec3 == std::vector<int>{1, 3, 5, 7}));
+    assert(fbh.empty());
 }
