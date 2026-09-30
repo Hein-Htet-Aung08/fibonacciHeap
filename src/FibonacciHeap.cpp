@@ -5,9 +5,14 @@ struct FibonacciHeap::Node {
     int key;
     Node* left;
     Node* right;
+    Node* parent = nullptr;
+    Node* child = nullptr;
+    std::size_t degree = 0;
+    bool mark = false; //Not full understanding.
+    std::size_t id;
 
-    explicit Node(int value)
-        : key(value), left(this), right(this) {}
+    explicit Node(int value, std::size_t node_id)
+        : key(value), left(this), right(this), id(node_id) {}
 };
 
 void FibonacciHeap::insert_after(Node* position, Node* node){
@@ -20,10 +25,11 @@ void FibonacciHeap::insert_after(Node* position, Node* node){
 }
 
 FibonacciHeap::Handle FibonacciHeap::insert(int key){
-    auto owned = std::make_unique<Node>(key); //Don't really get it but sure.
-    Node* node = owned.get();
-
     std::size_t id = nodes_.size();
+
+    auto owned = std::make_unique<Node>(key, id); //Don't really get it but sure.
+    Node* node = owned.get();
+    
     nodes_.push_back(node);
 
     if (min_ == nullptr){
