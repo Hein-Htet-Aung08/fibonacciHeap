@@ -227,3 +227,27 @@ void FibonacciHeap::cascading_cut(Node* node){
         cascading_cut(p);
     }
 }
+
+void FibonacciHeap::decrease_key(Handle handle, int new_key){
+    if(handle.id_ >= nodes_.size() || nodes_[handle.id_] == nullptr){
+        throw std::invalid_argument("Handle does not exist in nodes.");
+    }
+
+    Node* node = nodes_[handle.id_];
+
+    if(new_key > node->key){
+        throw std::invalid_argument("The new key entered must not be greater than the current key.");
+    }
+
+    node->key = new_key;
+    Node* p = node->parent;
+
+    if(p != nullptr && node->key < p->key){
+        cut(node, p);
+        cascading_cut(p);
+    }
+
+    if(node->key < min_->key){
+        min_ = node;
+    }
+}

@@ -31,6 +31,8 @@ class FibonacciHeap {
 
         int extract_min();
 
+        void decrease_key(Handle handle, int new_key);
+
     private:
         struct Node;
         Node* min_ = nullptr;
