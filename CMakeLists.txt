@@ -43,3 +43,21 @@ add_executable(large_decrease_benchmark
     benchmarks/large_decrease_benchmark.cpp
 )
 target_link_libraries(large_decrease_benchmark PRIVATE heaps)
+
+add_custom_target(run_benchmarks ALL
+    COMMAND "${CMAKE_COMMAND}" -E make_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/results"
+
+    COMMAND "$<TARGET_FILE:benchmark>"
+        > "${CMAKE_CURRENT_SOURCE_DIR}/results/insert_extract.csv"
+
+    COMMAND "$<TARGET_FILE:decrease_benchmark>"
+        > "${CMAKE_CURRENT_SOURCE_DIR}/results/batch_decrease.csv"
+
+    COMMAND "$<TARGET_FILE:large_decrease_benchmark>"
+        > "${CMAKE_CURRENT_SOURCE_DIR}/results/large_decrease.csv"
+
+    DEPENDS benchmark decrease_benchmark large_decrease_benchmark
+    COMMENT "Running benchmarks and saving CSV results"
+    VERBATIM
+)
