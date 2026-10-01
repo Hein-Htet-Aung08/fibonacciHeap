@@ -1,0 +1,25 @@
+# CMake build directories
+/build/
+/cmake-build-*/
+
+# Compiled files and debug symbols
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.dSYM/
+
+# Executables previously generated outside build/
+/heap_tests
+/benchmarks/benchmark
+
+# macOS metadata
+.DS_Store
+
+# Python cache, if plotting scripts are added
+__pycache__/
+*.pyc
