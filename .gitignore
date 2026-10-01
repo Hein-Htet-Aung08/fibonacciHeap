@@ -23,3 +23,6 @@
 # Python cache, if plotting scripts are added
 __pycache__/
 *.pyc
+
+#Results
+/results/
