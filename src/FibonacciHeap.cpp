@@ -10,7 +10,7 @@ struct FibonacciHeap::Node {
     Node* parent = nullptr;
     Node* child = nullptr;
     std::size_t degree = 0;
-    bool mark = false; //Not full understanding.
+    bool mark = false;
     std::size_t id;
 
     explicit Node(int value, std::size_t node_id)
@@ -29,7 +29,7 @@ void FibonacciHeap::insert_after(Node* position, Node* node){
 FibonacciHeap::Handle FibonacciHeap::insert(int key){
     std::size_t id = nodes_.size();
 
-    auto owned = std::make_unique<Node>(key, id); //Don't really get it but sure.
+    auto owned = std::make_unique<Node>(key, id);
     Node* node = owned.get();
 
     nodes_.push_back(node);
