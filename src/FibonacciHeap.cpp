@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <utility>
 #include <unordered_set>
+#include <memory>
 
 struct FibonacciHeap::Node {
     int key;

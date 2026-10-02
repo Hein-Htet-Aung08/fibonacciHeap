@@ -94,7 +94,7 @@ Building the project does not modify `resultsUsedInReport/`. The marker can insp
 | `benchmarks/large_decrease_benchmark.cpp` | Large-decrease harness |
 | `resultsUsedInReport/` | Fixed report measurements |
 | `results/` | Generated CSVs from fresh runs |
-| `report/` | Written report materials |
+| `report&video/` | Written report materials |
 | `CMakeLists.txt` | Library, executable, test, and benchmark-run targets |
 
 ## Experimental setup

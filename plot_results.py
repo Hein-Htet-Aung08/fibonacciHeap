@@ -11,7 +11,7 @@ OUT = ROOT / "output"
 OUT.mkdir(exist_ok=True)
 frames = []
 for name, expected_rows in [("insert_extract", 90), ("batch_decrease", 180), ("large_decrease", 180)]:
-    df = pd.read_csv(ROOT / "data" / (name + ".csv"))
+    df = pd.read_csv(ROOT / "resultsUsedInReport" / (name + ".csv"))
     assert len(df) == expected_rows
     assert df.workload.eq(name).all()
     if "updates_per_item" not in df:
